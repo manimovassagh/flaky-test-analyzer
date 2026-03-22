@@ -15,6 +15,7 @@ data/*.csv
 data/*.json
 
 # Generated notebook outputs
+notebooks/data/
 notebooks/*_executed.ipynb
 notebooks/dashboard_data.json
 notebooks/charts/
