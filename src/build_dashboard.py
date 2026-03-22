@@ -230,15 +230,15 @@ footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);
 <div class="grid-3">
   <div class="card">
     <div class="card-title">Classification</div>
-    <div id="chart-donut" style="height:220px"></div>
+    <div id="chart-donut" style="height:300px"></div>
   </div>
   <div class="card">
     <div class="card-title">Failures per Run</div>
-    <div id="chart-bar" style="height:220px"></div>
+    <div id="chart-bar" style="height:300px"></div>
   </div>
   <div class="card">
     <div class="card-title">Top 15 Flaky Tests</div>
-    <div id="chart-flaky" style="height:220px"></div>
+    <div id="chart-flaky" style="height:300px"></div>
   </div>
 </div>
 
@@ -258,10 +258,14 @@ footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);
 
 <div class="card">
   <div class="card-title">Per-Runner Failures</div>
-  <table class="runner-table" id="runner-table">
-    <thead><tr><th>Run ID</th><th>Failures</th><th>Failing Tests</th></tr></thead>
-    <tbody id="runner-tbody"></tbody>
-  </table>
+  <div style="max-height:480px;overflow-y:auto;border-radius:6px">
+    <table class="runner-table" id="runner-table">
+      <thead style="position:sticky;top:0;background:var(--card);z-index:1">
+        <tr><th>Run ID</th><th>Failures</th><th>Failing Tests</th></tr>
+      </thead>
+      <tbody id="runner-tbody"></tbody>
+    </table>
+  </div>
 </div>
 
 <footer>Generated &middot; <span id="gen-ts">—</span></footer>
@@ -329,10 +333,10 @@ Plotly.newPlot('chart-donut',[{
   labels:[`Stable (${cls.stable})`,`Flaky (${cls.flaky})`,`Broken (${cls.broken})`],
   values:[cls.stable, cls.flaky, cls.broken],
   marker:{colors:['#22c55e','#f59e0b','#ef4444']},
-  textinfo:'label+percent', textfont:{size:10},
+  textinfo:'label+percent', textfont:{size:11},
   hovertemplate:'%{label}<br>%{value} tests<extra></extra>',
 }],{
-  ...dark, margin:{t:10,b:10,l:10,r:10}, height:220,
+  ...dark, margin:{t:20,b:20,l:20,r:20}, height:300,
   showlegend:false,
 },PL);
 
@@ -349,9 +353,9 @@ Plotly.newPlot('chart-bar',[{
   line:{color:'#00e5c3', width:1.5, dash:'dot'},
   hovertemplate:`avg ${avg}<extra></extra>`,
 }],{
-  ...dark, margin:{t:10,b:30,l:30,r:10}, height:220,
-  xaxis:{showgrid:false, zeroline:false},
-  yaxis:{showgrid:true, gridcolor:'rgba(255,255,255,.05)', zeroline:false},
+  ...dark, margin:{t:20,b:40,l:40,r:20}, height:300,
+  xaxis:{showgrid:false, zeroline:false, title:{text:'Run #', font:{size:10}}},
+  yaxis:{showgrid:true, gridcolor:'rgba(255,255,255,.05)', zeroline:false, title:{text:'Failures', font:{size:10}}},
   showlegend:false,
 },PL);
 
@@ -365,8 +369,8 @@ Plotly.newPlot('chart-flaky',[{
   textposition:'outside', cliponaxis:false,
   hovertemplate:'%{y}<br>%{x}%<extra></extra>',
 }],{
-  ...dark, margin:{t:10,b:30,l:10,r:50}, height:220,
-  xaxis:{showgrid:false, zeroline:false, range:[0, Math.max(...D.top_flaky.rates)*1.2]},
+  ...dark, margin:{t:20,b:40,l:10,r:60}, height:300,
+  xaxis:{showgrid:false, zeroline:false, range:[0, Math.max(...D.top_flaky.rates)*1.3]},
   yaxis:{showgrid:false, automargin:true, tickfont:{size:9}},
 },PL);
 
