@@ -1,0 +1,54 @@
+name: Refresh Test Health Dashboard
+
+on:
+  schedule:
+    - cron: "30 * * * *"  # 30 min after your test runner (adjust to your schedule)
+  workflow_dispatch:        # manual trigger from GitHub UI
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Fetch TRX artifacts from test repo
+        env:
+          GITHUB_PAT:   ${{ secrets.TEST_RESULTS_PAT }}
+          TEST_ORG:     ${{ vars.TEST_ORG }}
+          TEST_REPO:    ${{ vars.TEST_REPO }}
+          MAX_RUNS:     "100"
+          ARTIFACT_KEY: "test"
+          OUT_DIR:      "data/runs"
+        run: uv run python src/fetch_artifacts.py
+
+      - name: Build dashboard
+        run: uv run python src/build_dashboard.py
+
+      - name: Commit updated dashboard
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html data/dashboard.json
+          git diff --staged --quiet || git commit -m "chore: refresh dashboard"
+          git push
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

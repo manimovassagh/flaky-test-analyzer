@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.venv/
+.python-version
+
+# Data — fetched at runtime, not committed
+data/runs/
+data/sample/
+data/*.csv
+data/*.json
+
+# Generated notebook outputs
+notebooks/*_executed.ipynb
+notebooks/dashboard_data.json
+notebooks/charts/
+notebooks/*.html
+notebooks/*.png
+
+# Logs
+*.log
+firebase-debug.log
+
+# uv lock (optional — remove this line if you want to commit it)
+uv.lock
+
+# OS
+.DS_Store
+Thumbs.db
